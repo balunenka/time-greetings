@@ -3,25 +3,31 @@ package main
 import (
 	"fmt"
 	"time"
+	"strconv"
+	"errors"
+	"os"
+	"github.com/fatih/color"
 )
 
 // Returns greeting text according to get current hour
 // It need a parameter int hour - 0...24
-func getGreetings(hour int) string {
-
+func getGreetings(hour int) (string, error) {
+	var message string
 	switch {
 	case (hour >= 6) && (hour < 12):
-		return "Good morning!"
+		message = "Good morning!"
 	case (hour >= 12) && (hour < 18):
-		return "Good afternoon!"
-	case (hour >= 18) && (hour < 23):
-		return "Good evening!"
-	case (hour >= 23) && (hour < 6):
-		return "Good night!"
+		message =  "Good afternoon!"
+	case (hour >= 18) && (hour < 22):
+		message =  "Good evening!"
+	case (((hour >= 22) && (hour <=24)) || ((hour >= 0) &&(hour < 6))):
+		message =  "Good night!"
 	default:
-		return "Incorrect time......"
+		err := errors.New("[ERROR] Incorrect value for hour: " + strconv.Itoa(hour))
+		return message, err
 	}
-
+	
+	return message, nil
 }
 
 /*
@@ -32,13 +38,24 @@ func getGreetings(hour int) string {
 func main() {
 	hourOfDay := time.Now().Hour()
 	minutesOfDay := time.Now().Minute()
+	//timeNow := strconv.Itoa( hourOfDay )+":"+strconv.Itoa( minutesOfDay )
+	fmt.Println( time.Now().UTC().Format("24:6") )
+
 	todayDay := time.Now().Day()
-	weekdayOfDay := time.Now().Weekday()
+	weekdayOfDay := time.Now().Weekday().String()
+	monthNow := time.Now().UTC().Format("January")
+	//dateNowMessage := "Today is: " + weekdayOfDay[ 0:3 ] + ", " + strconv.Itoa( todayDay ) + " of " + monthNow
 
-	fmt.Println("It's", hourOfDay, ":", minutesOfDay, " now")
-	fmt.Println("Today is ", weekdayOfDay, todayDay)
+	fmt.Printf( "It's %d:%d now \n", hourOfDay, minutesOfDay)
+	fmt.Printf( "Today is: %s, %d of %s \n", weekdayOfDay, todayDay, monthNow )
 
-	fmt.Println(getGreetings(hourOfDay))
-	//fmt.Println(getGreetings(1)) //  for test
+	greeting, err := getGreetings( hourOfDay )
+
+	if err != nil{
+		color.Red( err.Error() )  // print error message "err" in color red
+		os.Exit( 1 )
+		
+	}
+	fmt.Println( greeting )
 
 }
