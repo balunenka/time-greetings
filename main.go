@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"time"
-	"strconv"
 	"errors"
+	"fmt"
 	"os"
+	"strconv"
+	"time"
+
 	"github.com/fatih/color"
 )
 
@@ -17,16 +18,16 @@ func getGreetings(hour int) (string, error) {
 	case (hour >= 6) && (hour < 12):
 		message = "Good morning!"
 	case (hour >= 12) && (hour < 18):
-		message =  "Good afternoon!"
+		message = "Good afternoon!"
 	case (hour >= 18) && (hour < 22):
-		message =  "Good evening!"
-	case (((hour >= 22) && (hour <=24)) || ((hour >= 0) &&(hour < 6))):
-		message =  "Good night!"
+		message = "Good evening!"
+	case (((hour >= 22) && (hour <= 24)) || ((hour >= 0) && (hour < 6))):
+		message = "Good night!"
 	default:
 		err := errors.New("[ERROR] Incorrect value for hour: " + strconv.Itoa(hour))
 		return message, err
 	}
-	
+
 	return message, nil
 }
 
@@ -39,23 +40,22 @@ func main() {
 	hourOfDay := time.Now().Hour()
 	minutesOfDay := time.Now().Minute()
 	//timeNow := strconv.Itoa( hourOfDay )+":"+strconv.Itoa( minutesOfDay )
-	fmt.Println( time.Now().UTC().Format("24:6") )
 
 	todayDay := time.Now().Day()
 	weekdayOfDay := time.Now().Weekday().String()
 	monthNow := time.Now().UTC().Format("January")
 	//dateNowMessage := "Today is: " + weekdayOfDay[ 0:3 ] + ", " + strconv.Itoa( todayDay ) + " of " + monthNow
 
-	fmt.Printf( "It's %d:%d now \n", hourOfDay, minutesOfDay)
-	fmt.Printf( "Today is: %s, %d of %s \n", weekdayOfDay, todayDay, monthNow )
+	fmt.Printf("It's %d:%d now \n", hourOfDay, minutesOfDay)
+	fmt.Printf("Today is: %s, %d of %s \n", weekdayOfDay, todayDay, monthNow)
 
-	greeting, err := getGreetings( hourOfDay )
+	greeting, err := getGreetings(hourOfDay)
 
-	if err != nil{
-		color.Red( err.Error() )  // print error message "err" in color red
-		os.Exit( 1 )
-		
+	if err != nil {
+		color.Red(err.Error()) // print error message "err" in color red
+		os.Exit(1)
+
 	}
-	fmt.Println( greeting )
+	fmt.Println(greeting)
 
 }
