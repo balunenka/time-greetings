@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/fatih/color"
@@ -38,20 +41,33 @@ func getGreetings(hour int) (string, error) {
 func setHour() int {
 
 	var hour int
+	var input string
+	var errReader, errAtoi error
+
 	var isEntered bool
 	for !isEntered {
-		fmt.Printf("Please enter the hour: ")
-		_, err := fmt.Scan(&hour)
 
-		if err != nil {
-			color.Red(err.Error()) // print error message "err" in color red if not integer was inputted
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Printf("Enter text: ")
+		input, errReader = reader.ReadString('\n')
+		input = strings.Replace(input, "\n", "", -1)
+
+		if errReader != nil {
+			color.Red(errReader.Error()) // print error message "err" in color red if not integer was inputted
 
 		} else {
-			isEntered = true
+			hour, errAtoi = strconv.Atoi(input)
+			if errAtoi != nil {
+				color.Red(errAtoi.Error() + " - should be integer number\n") // print error message "err" in color red if not integer was inputted
+				color.Yellow("Try again...\n\n")
+
+			} else {
+				isEntered = true
+			}
+
 		}
 
 	}
-
 	fmt.Printf("\n\n\n")
 	return hour
 }
@@ -103,6 +119,7 @@ func main() {
 
 	if err != nil {
 		color.Red(err.Error()) // print error message "err" in color red
+		log.Printf(err.Error())
 		os.Exit(1)
 
 	}
