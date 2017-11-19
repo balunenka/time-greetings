@@ -82,7 +82,7 @@ func getGreetings(hour int) (string, error) {
 	default:
 		//err := errors.New("[ERROR] Incorrect value for hour: " + strconv.Itoa(hour))
 		err = greetingError(strconv.Itoa(hour))
-		return message, err
+
 	}
 
 	return message, err
@@ -144,44 +144,43 @@ func main() {
 	var hourOfDay, minutesOfDay, todayDay int
 	var weekdayOfDay, monthNow string
 	var isEntered bool
-	var err error
+	var setHourErr, greetingErr error
 
 	todayDay = -1     // set as default incorrect value
 	minutesOfDay = -1 // set as default incorrect value
 	hourOfDay = -1    // set as default incorrect value
 
 	if isTestMode {
-		fmt.Printf("In a test mode now!\n\n")
+		color.HiGreen("Running in a test mode now!\n\n")
 		_, minutesOfDay, todayDay, weekdayOfDay, monthNow = getCurrentTime()
 
 		for {
-			isEntered, hourOfDay, err = setHour()
+			isEntered, hourOfDay, setHourErr = setHour()
 			if isEntered {
 				break
 			} else {
-				checkError(err)
-				color.Yellow("Try again...\n\n")
+				if !(checkError(setHourErr)) {
+					color.Yellow("Try again...\n\n")
+				}
+
 			}
 		}
 
-		fmt.Printf("It's %d:%d now \n", hourOfDay, minutesOfDay)
-		fmt.Printf("Today is: %s, %d of %s \n\n", weekdayOfDay, todayDay, monthNow)
-
 	} else {
-		fmt.Printf("In ususal mode...\n\n")
+		color.HiGreen("Running in an ususal mode...\n\n")
 
 		hourOfDay, minutesOfDay, todayDay, weekdayOfDay, monthNow = getCurrentTime()
-
-		fmt.Printf("It's %d:%d now \n", hourOfDay, minutesOfDay)
-		fmt.Printf("Today is: %s, %d of %s \n\n", weekdayOfDay, todayDay, monthNow)
 	}
 
-	greeting, err := getGreetings(hourOfDay)
+	greeting, greetingErr := getGreetings(hourOfDay)
 
-	if !(checkError(err)) {
-		os.Exit(1)
-	} else {
+	if !(checkError(greetingErr)) {
+		fmt.Printf("It's %d:%d now \n", hourOfDay, minutesOfDay)
+		fmt.Printf("Today is: %s, %d of %s \n\n", weekdayOfDay, todayDay, monthNow)
+
 		fmt.Println(greeting)
+	} else {
+		os.Exit(1)
 	}
 
 }
