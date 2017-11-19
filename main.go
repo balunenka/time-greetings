@@ -159,7 +159,7 @@ func main() {
 			if isEntered {
 				break
 			} else {
-				if !(checkError(setHourErr)) {
+				if checkError(setHourErr) {
 					color.Yellow("Try again...\n\n")
 				}
 
