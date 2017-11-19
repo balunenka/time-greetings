@@ -14,6 +14,20 @@ import (
 	"github.com/fatih/color"
 )
 
+// error catcher - returns true value
+func checkError(err error) bool {
+	var errorExist bool
+	if err != nil {
+		errorExist = true
+		color.Red(err.Error())
+		log.Printf(err.Error())
+
+	} else {
+		errorExist = false
+	}
+	return errorExist
+}
+
 // Returns greeting text according to get current hour
 // It need a parameter int hour - 0...24
 func getGreetings(hour int) (string, error) {
@@ -52,7 +66,16 @@ func setHour() int {
 		input, errReader = reader.ReadString('\n')
 		input = strings.Replace(input, "\n", "", -1)
 
-		if errReader != nil {
+		if !(checkError(errReader)) {
+			hour, errAtoi = strconv.Atoi(input) // convert user string input to int
+			if !(checkError(errAtoi)) {
+				isEntered = true // check if conversation was correct - exit loop of input
+
+			}
+
+		}
+
+		/* if errReader != nil {
 			color.Red(errReader.Error()) // print error message "err" in color red if not integer was inputted
 
 		} else {
@@ -65,7 +88,7 @@ func setHour() int {
 				isEntered = true
 			}
 
-		}
+		} */
 
 	}
 	fmt.Printf("\n\n\n")
@@ -117,12 +140,17 @@ func main() {
 
 	greeting, err := getGreetings(hourOfDay)
 
-	if err != nil {
+	if !(checkError(err)) {
+		os.Exit(1)
+	} else {
+		fmt.Println(greeting)
+	}
+
+	/* if err != nil {
 		color.Red(err.Error()) // print error message "err" in color red
 		log.Printf(err.Error())
 		os.Exit(1)
 
-	}
-	fmt.Println(greeting)
+	} */
 
 }
