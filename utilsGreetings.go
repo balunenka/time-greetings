@@ -26,7 +26,7 @@ func getGreetings(hour int) (string, error) {
 	case (((hour >= 22) && (hour <= 24)) || ((hour >= 0) && (hour < 6))):
 		message = "Good night!"
 	default:
-		//err := errors.New("[ERROR] Incorrect value for hour: " + strconv.Itoa(hour))
+
 		err = greetingError(strconv.Itoa(hour))
 
 	}

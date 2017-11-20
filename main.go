@@ -10,7 +10,7 @@ import (
 
 // Main function that runs the program
 func main() {
-	var isTestMode bool
+	var isTestMode bool // bool var for flag on run
 	flag.BoolVar(&isTestMode, "testMode", false, "Turns on test mode of application. Ability to input manually hour")
 	flag.Parse()
 
