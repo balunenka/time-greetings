@@ -19,4 +19,6 @@ GOOS=windows
 go build
 mv ${PACKAGE_NAME}.exe ${PACKAGE_BIN_DIR}/${PACKAGE_NAME}-${GOOS}.exe
 
+git log --pretty=format:"- %cd: %s%n%b" --date=short  > CHANGELOG
+
 # zip ${PACKAGE_NAME}.zip ${PACKAGE_NAME}-*
